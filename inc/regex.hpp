@@ -27,6 +27,7 @@ class Regex {
 
         Node(bool is_terminate=false) : is_terminate(is_terminate), id(0) {}
 
+        /* insert transition by char c to node next */
         void insert(char c, Node* next) {
             auto [start, end] = go.equal_range(c);
             if (find_if(start, end,
@@ -85,6 +86,7 @@ class Regex {
             start->insert(c, end);
         }
 
+        /* update stack st with operation op */
         static void apply(stack<RegexPart>& st, char op) {
             switch (op) {
                 case '.': {
@@ -110,11 +112,13 @@ class Regex {
             }
         }
 
+        /* get result */
         std::pair<Node*, Node*> get() {
             return {start, end};
         }
     };
 
+    /* generate reachable nodes */
     static vector<Node*> gen_id2node(Node* start) {
         vector<Node*> ids;
         unordered_set<Node*> visited;
@@ -137,6 +141,7 @@ class Regex {
         return ids;
     }
 
+    /* update terminateness and add transitions */
     static void update_transitions(Node* node) {
         unordered_set<Node*> visited;
 
@@ -158,6 +163,7 @@ class Regex {
         }
     }
 
+    /* parse strint regex */
     static Node* construct(const string& regex) {
         stack<RegexPart> st;
         for (const char& op: regex)
@@ -200,6 +206,7 @@ public:
     }
 
     Regex(const Regex& other) = delete;
+
     Regex(Regex&& other) : root(other.root), id2node(other.id2node) {
         other.root = nullptr;
         other.id2node = vector<Node*>();
