@@ -1,8 +1,10 @@
 CPP=g++
 CPPFLAGS=--std=c++17
+CPPGCOVFLAGS=-fprofile-arcs -ftest-coverage
 SRC=src/*.cpp
 INC=inc
-TESTSRC=test/*.cpp
+TESTDIR=test
+TESTSRC=$(TESTDIR)/*.cpp
 GTESTSRC=googletest
 GTESTINC=googletest/googletest/include
 GTEST=gtest
@@ -17,7 +19,10 @@ tests:
 	mkdir -p $(GTEST)
 	cmake -S $(GTESTSRC) -B $(GTEST)
 	make -C $(GTEST)
-	$(CPP) $(CPPFLAGS) $(TESTSRC) -I$(INC) -L$(GTESTLIBDIR) -I$(GTESTINC) $(GTESTLIBS) -o tests
+	$(CPP) $(CPPFLAGS) $(CPPGCOVFLAGS) $(TESTSRC) -I$(GTESTINC) -I$(INC) -L$(GTESTLIBDIR) $(GTESTLIBS) -o tests
+	./tests && gcov -r $(TESTDIR)
 
 clear:
 	rm -r $(GTEST)
+	rm tests
+	rm *.gcov *.gcda *.gcno

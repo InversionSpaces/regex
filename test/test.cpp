@@ -60,6 +60,13 @@ TEST(Regex, ComplexRegex) {
 
 TEST(Regex, LargeAcceptableSubstring) {
     {
+        string regex = "ab+c.";
+        string str = "baba";
+
+        auto substr = Regex::large_acceptable_substring(regex, str);
+        ASSERT_TRUE(substr.length() == 0);
+    }
+    {
         string regex = "ab+c.aba.*.bac.+.+*";
         string str = "babc";
 
